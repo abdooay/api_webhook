@@ -127,10 +127,11 @@ def compquote():
     response["value"]["requestReferenceNo"] = request_data.get("RequestReferenceNo")
     response["value"]["quoteReferenceNo"] = request_data.get("RequestReferenceNo")
     response["value"]["policyTitleID"] = request_data.get("PolicyTitleID")
-    response["value"]["policyEffectiveDate"] = request_data.get("PolicyEffectiveDate")[
-        :10
-    ]  # Get only the date part
-    response["value"]["policyExpiryDate"] = "2025-11-11"  # Static value for testing
+    effective_date = request_data.get("PolicyEffectiveDate")[:10]  # Get only the date part
+    response["value"]["policyEffectiveDate"] = effective_date
+    # Calculate expiry date as 1 year after effective date
+    expiry_date = (datetime.datetime.strptime(effective_date, "%Y-%m-%d") + datetime.timedelta(days=364)).strftime("%Y-%m-%d") 
+    response["value"]["policyExpiryDate"] = expiry_date
     response["value"]["vehicleSumInsured"] = request_data.get("VehicleSumInsured")
     response["value"]["hasTrailer"] = request_data.get("HasTrailer")
     response["value"]["trailerSumInsure"] = request_data.get("TrailerSumInsured")
